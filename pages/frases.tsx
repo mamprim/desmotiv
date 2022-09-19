@@ -1,7 +1,9 @@
 import { GetStaticProps } from "next";
+import { setRevalidateHeaders } from "next/dist/server/send-payload";
+import { allFrases, tFrases } from "../service/base";
 
 interface FrasesProps {
-    frases: Array<string>;
+    frases: Array<tFrases>;
 }
 
 export default function frases({frases}: FrasesProps){
@@ -10,30 +12,28 @@ export default function frases({frases}: FrasesProps){
         <br />
 
         {
-            frases.map((frases, index) => 
-            (<div key={index}>{
-                frases}</div>)
+            
+            frases.map((frase, index) => 
+            (<div key={frase.id}>
+                {frase.frase}</div>)
         )}
         <br />
+        <button>click aqui</button>
     </div>;
     
 }
 
 export const getStaticProps: GetStaticProps = async (context) => {
-    const frases = [
-        "sem saber que era impossivel, foi la e soube.",
-        "Devemos deixar de ser egoístas e começar a pensar em nós mesmos.",
-        "É hora de esquecer os erros do passado e começar a pensar nos erros do futuro.",
-        "Gostaria de agradecer você a essa crítica que você aí, extremamente destrutiva, realmente ajudou muito a levantar minha moral.",
-        "Eu acredito em um amanhã melhor, até porque amanhã é sexta-feira.",
-        "Errar é humano, colocar a culpa em alguém é estratégico.",
-        "Num dia a gente perde, no outro a gente é derrotado. ",
-    ];
+    const aleatorio = ((Math.random() * allFrases.length)).toFixed(0);
+    console.log(aleatorio);
+    const  frases = allFrases.filter(
+        (frase) => frase.id == aleatorio
+    );
 
     return{
         props: {
             frases,
         },
-        revalidate: 10,
+        revalidate: 1,
     };
   }
