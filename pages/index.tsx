@@ -7,7 +7,6 @@ const Home: NextPage = () => {
   return (
     <div className={styles.container}>
       hello world! <br/>
-      Herrar é umano
     </div>
   )
 }
