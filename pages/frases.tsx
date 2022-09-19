@@ -1,9 +1,10 @@
 import { GetStaticProps } from "next";
-import { setRevalidateHeaders } from "next/dist/server/send-payload";
 import { allFrases, tFrases } from "../service/base";
+import { prisma }  from "../lib/prisma"; "../lib/prisma";
+import {Frase} from "@prisma/client";
 
 interface FrasesProps {
-    frases: Array<tFrases>;
+    frases: Frase;
 }
 
 export default function frases({frases}: FrasesProps){
@@ -13,22 +14,29 @@ export default function frases({frases}: FrasesProps){
 
         {
             
-            frases.map((frase, index) => 
-            (<div key={frase.id}>
-                {frase.frase}</div>)
-        )}
+            <div key={frases.id}>
+                {frases.frase}</div>
+        }
         <br />
-        <button>click aqui</button>
+        <button onClick={() => window.location.reload()}>Gerar Nova Frase</button>
     </div>;
     
 }
 
 export const getStaticProps: GetStaticProps = async (context) => {
     const aleatorio = ((Math.random() * allFrases.length)).toFixed(0);
-    console.log(aleatorio);
-    const  frases = allFrases.filter(
-        (frase) => frase.id == aleatorio
-    );
+    var y: number = +aleatorio;
+    const  frases = await prisma.frase.findUnique({
+        where: {
+            id: y,
+        }
+     } )
+
+     console.log(y);
+    console.log(frases);
+    //const  frases = allFrases.filter(
+    //    (frase) => frase.id == aleatorio
+    //)
 
     return{
         props: {
